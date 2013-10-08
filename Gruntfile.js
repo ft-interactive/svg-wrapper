@@ -126,7 +126,7 @@ module.exports = function (grunt) {
             all: {
                 options: {
                     run: true,
-                    urls: ['http://localhost:<%= connect.options.port %>/index.html']
+                    urls: ['http://localhost:<%= connect.options.port %>/img.html']
                 }
             }
         },
@@ -210,7 +210,7 @@ module.exports = function (grunt) {
             options: {
                 dest: '<%= yeoman.dist %>'
             },
-            html: '<%= yeoman.app %>/index.html'
+            html: '<%= yeoman.app %>/img.html'
         },
         usemin: {
             options: {
@@ -327,7 +327,7 @@ module.exports = function (grunt) {
             },
             dist: {
                 files: {
-                    '<%= yeoman.dist %>/index.html': '<%= yeoman.dist %>/index.html'
+                    '<%= yeoman.dist %>/img.html': '<%= yeoman.dist %>/img.html'
                 }
             }
         },
