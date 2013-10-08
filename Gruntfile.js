@@ -301,18 +301,6 @@ module.exports = function (grunt) {
                 src: '{,*/}*.css'
             }
         },
-        'sftp-deploy': {
-            build: {
-                auth: {
-                    host: 'ftlnx109-lviw-uk-p',
-                    port: 22,
-                    authKey: 'local'
-                },
-                src: '<%= yeoman.dist %>',
-                dest: '/var/opt/customer/apps/interactive.ftdata.co.uk/var/www/html/features/b/svg-wrapper',
-                exclusions: ['<%= yeoman.dist %>/**/.DS_Store', '<%= yeoman.dist %>/**/Thumbs.db','<%= yeoman.dist %>/**/.git*'],
-            }
-        },
         modernizr: {
             parseFiles: false,
             outputFile: '.tmp/scripts/vendor/modernizr.js',
@@ -397,8 +385,4 @@ module.exports = function (grunt) {
         'build'
     ]);
 
-    grunt.registerTask('deploy', [
-        'default',
-        'sftp-deploy'
-    ]);
 };
