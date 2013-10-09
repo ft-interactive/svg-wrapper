@@ -8,8 +8,6 @@ var mountFolder = function (connect, dir) {
     return connect.static(require('path').resolve(dir));
 };
 
-var modernizrConf = require('./modernizr.json');
-
 
 // # Globbing
 // for performance reasons we're only matching one level down:
@@ -126,7 +124,7 @@ module.exports = function (grunt) {
             all: {
                 options: {
                     run: true,
-                    urls: ['http://localhost:<%= connect.options.port %>/img.html']
+                    urls: ['http://localhost:<%= connect.options.port %>/index.html']
                 }
             }
         },
@@ -301,14 +299,6 @@ module.exports = function (grunt) {
                 src: '{,*/}*.css'
             }
         },
-        modernizr: {
-            parseFiles: false,
-            outputFile: '.tmp/scripts/vendor/modernizr.js',
-            uglify: false,
-            extra: modernizrConf.extra,
-            extensibility : modernizrConf.extensibility,
-            tests: modernizrConf.tests,
-        },
         embed: {
             options: {
                 threshold: '10KB'
@@ -321,7 +311,6 @@ module.exports = function (grunt) {
         },
         concurrent: {
             server: [
-                'modernizr',
                 'compass',
                 'coffee:dist',
                 'copy:styles'
@@ -331,7 +320,6 @@ module.exports = function (grunt) {
                 'copy:styles'
             ],
             dist: [
-                'modernizr',
                 'coffee',
                 'compass',
                 'copy:styles',
