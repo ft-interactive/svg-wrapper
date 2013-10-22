@@ -287,7 +287,7 @@ module.exports = function (grunt) {
                         '.htaccess',
                         'images/**/*.{webp,gif}',
                         'styles/fonts/*',
-                        'scripts/vendor/es5-shim.js'
+                        'scripts/vendor/getComputedStyle.js'
                     ]
                 }]
             },
