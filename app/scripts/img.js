@@ -1,7 +1,7 @@
 (function(){
   'use strict';
-
-  var console = console || { log: function() {}, error: function() {} };
+  
+  window.console = window.console || { log: function() {}, error: function() {} };
 
   if (window.parent === window) {
     console.error('This wrapper must be loaded as an iframe');
@@ -11,8 +11,21 @@
   var frameElement = window.frameElement;
 
   function hideThisFrame() {
-    frameElement.style.display = 'none';
-    frameElement.style.visibility = 'hidden';
+    hideElement(frameElement);
+  }
+
+  function hideElement(el) {
+    if (!el) return;
+    var s = el.style;
+    s.display = 'none';
+    s.visibility = 'hidden';
+  }
+
+  function unhideElement(el) {
+    if (!el) return;
+    var s = el.style;
+    s.display = '';
+    s.visibility = '';
   }
 
   if (document.domain && /ft\.com$/.test(document.domain)) {
@@ -37,9 +50,9 @@
   var svgSrc = params[0];
   var imgSrc = params[1];
   var fallbackSelector;
-  var fallbackNode;
+  var fallbackNodes;
   var appendToParent = typeof params[2] === 'undefined' ? false : /^(true|y|yes)$/i.test(params[2]);
-  var bgColor = '#' + (params[3] || 'fff1e0').replace('##', '#');
+  var bgColor = '#' + (params[3] || 'fff1e0').replace(/^#/, '');
 
   var iframeWidth = frameElement.width || frameElement.style.width;
   var iframeHeight = frameElement.height || frameElement.style.height;
@@ -108,81 +121,112 @@
 
   img.src = svgSupport ? svgSrc : (!fallbackSelector ? imgSrc: '');
 
-  img.onload = function(){
-    var fe = frameElement;
+  var hasImageToLoad = !!img.src;
 
-    if (!iframeWidth && !iframeHeight) {
+  if (hasImageToLoad) {
+    img.onload = function () {
+      var fe = frameElement;
+      if (!iframeWidth && !iframeHeight) {
 
-      fe.width = img.width;
-      fe.height = img.height;
+        fe.width = img.width;
+        fe.height = img.height;
 
-    } else if (!!iframeWidth && !iframeHeight) {
-      // iframe width has been set.
-      // scale image to fit specified width.
-      // alter iframe height to same as image height
-      fe.height = fitWidth(img, iframeWidth)[1];
+      } else if (!!iframeWidth && !iframeHeight) {
+        // iframe width has been set.
+        // scale image to fit specified width.
+        // alter iframe height to same as image height
+        fe.height = fitWidth(img, iframeWidth)[1];
 
-    } else if (!!iframeHeight && !iframeWidth) {
-      // iframe height has been set.
-      // scale image to fit specified height.
-      // alter iframe width to same as image width
-      fe.width = fitHeight(img, iframeHeight)[0];
+      } else if (!!iframeHeight && !iframeWidth) {
+        // iframe height has been set.
+        // scale image to fit specified height.
+        // alter iframe width to same as image width
+        fe.width = fitHeight(img, iframeHeight)[0];
 
-    } else {
-      // both dimensions are set - do not alter iframe size at all.
-      // if image to big for available space then reduce it to best fit 
-      var w = img.width,
-          h = img.height,
-          wDiff = iframeWidth - w,
-          widthIsClipped = wDiff < 0,
-          hDiff = iframeHeight - h,
-          heightIsClipped = hDiff < 0;
-      if (widthIsClipped && heightIsClipped) {
-        console.log(Math.min(wDiff, hDiff), wDiff, Math.min(wDiff, hDiff) === wDiff);
-        if (Math.min(wDiff, hDiff) === hDiff) {
+      } else {
+        // both dimensions are set - do not alter iframe size at all.
+        // if image to big for available space then reduce it to best fit 
+        var w = img.width,
+            h = img.height,
+            wDiff = iframeWidth - w,
+            widthIsClipped = wDiff < 0,
+            hDiff = iframeHeight - h,
+            heightIsClipped = hDiff < 0;
+        if (widthIsClipped && heightIsClipped) {
+          console.log(Math.min(wDiff, hDiff), wDiff, Math.min(wDiff, hDiff) === wDiff);
+          if (Math.min(wDiff, hDiff) === hDiff) {
+            fitWidth(img, iframeWidth);
+          } else {
+            fitHeight(img, iframeHeight);
+          }
+        // todo: do we align the image both horizontally and vertically according to available space?
+        //       what if we are appending image to the parent frame - not to this frame?
+        } else if (widthIsClipped) {
           fitWidth(img, iframeWidth);
-        } else {
-          fitHeight(img, iframeHeight);
+        } else if (heightIsClipped) {
+          fitWidth(img, iframeHeight);
         }
-      // todo: do we align the image both horizontally and vertically according to available space?
-      //       what if we are appending image to the parent frame - not to this frame?
-      } else if (widthIsClipped) {
-        fitWidth(img, iframeWidth);
-      } else if (heightIsClipped) {
-        fitWidth(img, iframeHeight);
+      }
+    };
+
+
+
+    img.onerror = function() {
+      if (img) {
+        if (img.parentNode) {
+          img.parentNode.removeChild(img);
+        }
+        purge(img);
+        img = null;
+      }
+      hideThisFrame();
+      if (fallbackNodes) {
+        for (var i = 0, x = fallbackNodes.length; i < x ; i += 1) {
+          unhideElement(fallbackNodes[i]);
+        }
+      }
+    };
+
+    if (appendToParent) {
+      frameElement.parentNode.insertBefore(img, frameElement.nextSibling);
+      hideThisFrame();
+    } else {
+      document.body.appendChild(img);
+    }
+
+    if (!!fallbackSelector) {
+      var fallbackContext;
+      var firstChar = fallbackSelector.charAt(0);
+
+      if (firstChar) {
+        switch(firstChar) {
+          case ':':
+            fallbackSelector.replace(/^\:(\ +)?/, '');
+            fallbackContext = window.parent.document.querySelector('#pageContainer .middleSection');
+            break;
+          case '=':
+            fallbackSelector.replace(/^\=(\ +)?/, '');
+            fallbackContext = window.frameElement.parentNode;
+            break;
+          default:
+            fallbackContext = window.parent.document;
+        };
+        if (fallbackContext) {
+          fallbackNodes = fallbackContext.querySelectorAll(fallbackSelector);
+          if (fallbackNodes) {
+            for (var i = 0, x = fallbackNodes.length; i < x ; i += 1) {
+              hideElement(fallbackNodes[i]);
+            }
+          }
+        }
       }
     }
-  };
 
-  img.onerror = function(){
-    if (fallbackNode) {
-      fallbackNode.style.display = '';
-    }
-    if (img) {
-      if (img.parentNode) {
-        img.parentNode.removeChild(img);
-      }
-      purge(img);
-      img = null;
-    }
-    hideThisFrame();
-  };
-
-  if (!svgSupport && !!fallbackSelector) {
-    fallbackNode = window.parent.document.querySelector(fallbackSelector);
-    if (fallbackNode) {
-      fallbackNode.style.display = 'none';
-    }
-  }
-
-  if (appendToParent) {
-    frameElement.parentNode.insertBefore(img, frameElement.nextElementSibling);
-    hideThisFrame();
   } else {
-    document.body.appendChild(img);
+    console.log('HIDE THIS FRAME')
+    hideThisFrame();
   }
 
-  // if a fallback is not specified or an 'fallback target' is specified crawl up to the parent and see if there is an inline image immediately before the iframe and hide it
   // make a bl.ocks.org example of how it works with a fallback
   // allow an optional stylesheet to pull in
   // when viewed in the preview frame write console.error messages to the preview frame.

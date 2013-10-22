@@ -9,13 +9,35 @@
         <title>Preview : SVG Wrapper</title>
         <meta name="description" content="FT SVG Wrapper Preview">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-        <style>body{background-color: #aaa;}iframe{background-color: #fff;}label{display:block;}</style>
+        <style>body{background-color: #aaa;padding:0;margin: 0;}iframe{background-color: #fff;}label{display:block;}</style>
     </head>
     <body>
+        <br/><br/><label>SVG Not spported</label>
+        <iframe src="img.html#http://upload.wikimedia.org/wikipedia/en/3/3a/Pan_Am_Logo.svg__.no-support-fallback-class____fff" width="100" height="0" scrolling="no" frameborder="0"></iframe>
+        <div class="no-support-fallback-class">
+            This element should display if SVG is not supported
+        </div>
+
+
+        <br/><br/><label>SVG URL broken</label>
+        <iframe src="img.html#http://example.com/nothing.svg__.broken-img-fallback-class____fff" width="100" height="0" scrolling="no" frameborder="0"></iframe>
+        <div class="broken-img-fallback-class">
+            This element should display because the SVG link is broken
+        </div>
+
+
+        <br/><br/><label>On success hide page element</label>
+        <iframe src="img.html#http://upload.wikimedia.org/wikipedia/en/3/3a/Pan_Am_Logo.svg__.success-class____fff" width="100" height="0" scrolling="no" frameborder="0"></iframe>
+        <div class="success-class">
+            When SVG is supported: This element <strong>should not</strong> be displayed because loading was successful.<br/>
+            When SVG is not supported: This element <strong>should</strong> be displayed.
+        </div>
+        <br/><br/><br/>
+
         <label>Nothing set: 0-0</label>
         <iframe src="img.html#http://upload.wikimedia.org/wikipedia/commons/d/d2/JSainsburys_Logo.svg__http://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/JSainsburys_Logo.svg/1000px-JSainsburys_Logo.svg.png__" width="0" height="0" scrolling="no" frameborder="0"></iframe>
-        <br/><br/><label>Height Set: 0-300</label>
-        <iframe src="img.html#http://upload.wikimedia.org/wikipedia/commons/d/d2/JSainsburys_Logo.svg__http://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/JSainsburys_Logo.svg/1000px-JSainsburys_Logo.svg.png__" width="0" height="300" scrolling="no" frameborder="0"></iframe>
+        <br/><br/><label>Height Set: 0-200</label>
+        <iframe src="img.html#http://upload.wikimedia.org/wikipedia/commons/d/d2/JSainsburys_Logo.svg__http://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/JSainsburys_Logo.svg/1000px-JSainsburys_Logo.svg.png__" width="0" height="200" scrolling="no" frameborder="0"></iframe>
         <br/><br/><label>Width Set: 300-0</label>
         <iframe src="img.html#http://upload.wikimedia.org/wikipedia/commons/d/d2/JSainsburys_Logo.svg__http://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/JSainsburys_Logo.svg/1000px-JSainsburys_Logo.svg.png__true" width="300" height="0" scrolling="no" frameborder="0"></iframe>
         <br/><br/><label>Both Set: 300-300</label>
