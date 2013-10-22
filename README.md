@@ -24,7 +24,7 @@ Parameters are separated by a double underscore (`__`) and recognised by their p
 
 ### Params
 
-#### 0 : Full absolute URL to the SVG (including `http://`). 
+#### 0 : Full absolute URL to the SVG 
 
 - Accepts a string
 - If SVG is supported or the image fails to load then the fallback value will be used (see below).
@@ -53,7 +53,7 @@ Parameters are separated by a double underscore (`__`) and recognised by their p
 - accepts a hex string. you dont need the '#' at the beginning.
 - defaults to FT pink: `fff1e0`
 
-### iframe dimensions**
+### iframe dimensions
 
 The iframe's dimensions are used to set the size of the SVG (or the fallback image) nicely scaling the image automatically.
 
