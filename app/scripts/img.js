@@ -1,6 +1,7 @@
 (function(){
+
   'use strict';
-  
+
   window.console = window.console || { log: function() {}, error: function() {} };
 
   if (window.parent === window) {
@@ -200,17 +201,18 @@
 
       if (firstChar) {
         switch(firstChar) {
-          case ':':
-            fallbackSelector.replace(/^\:(\ +)?/, '');
-            fallbackContext = window.parent.document.querySelector('#pageContainer .middleSection');
-            break;
-          case '=':
-            fallbackSelector.replace(/^\=(\ +)?/, '');
-            fallbackContext = window.frameElement.parentNode;
-            break;
-          default:
-            fallbackContext = window.parent.document;
-        };
+        case ':':
+          fallbackSelector.replace(/^\:(\ +)?/, '');
+          fallbackContext = window.parent.document.querySelector('#pageContainer .middleSection');
+          break;
+        case '=':
+          fallbackSelector.replace(/^\=(\ +)?/, '');
+          fallbackContext = window.frameElement.parentNode;
+          break;
+        default:
+          fallbackContext = window.parent.document;
+        }
+
         if (fallbackContext) {
           fallbackNodes = fallbackContext.querySelectorAll(fallbackSelector);
           if (fallbackNodes) {
@@ -223,7 +225,6 @@
     }
 
   } else {
-    console.log('HIDE THIS FRAME')
     hideThisFrame();
   }
 
