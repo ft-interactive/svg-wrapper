@@ -12,14 +12,16 @@ Example
 <iframe src="http://{hostname}/svg-wrapper/img.html#http://example.com/mygraphic.svg__.thing-to-hide__true__ff0000" width="100" height="0" scrolling="no" frameborder="0"></iframe>
 ```
 
-In the iframe above you will notice that parameters to the SVG wrapper are provided via the hash/fragment. The has is used to improve caching.
+In the iframe above you will notice that parameters to the SVG wrapper are provided via the hash/fragment. The hash is used to improve caching.
 
-Parameters are separated by a double underscore (`__`) and recognised by their position, for example the first param is the SVG url and the second is the fallback. If you dont want to provide a value for a particular param then you need to use 4 underscores (`____`). Therefore in the example above the SVG wrapper is being passed four parameters:
+In the example above the SVG wrapper is being passed four parameters:
 
 - `http://example.com/mygraphic.svg` The SVG url
 - `.thing-to-hide` The fallback element
 - `true` True if you want to append the SVG to the parent window or keep it contained in the iframe
 - `ff0000` The background colour of the SVG - defaults to FT pink
+
+Parameters are separated by a double underscore (`__`) and recognised by their position, for example the first param is the SVG url and the second is the fallback. If you don't want to provide a value for a particular param then you need to use 4 underscores (`____`).
 
 
 ### Params
