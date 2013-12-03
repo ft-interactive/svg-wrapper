@@ -2,6 +2,10 @@
 
   'use strict';
 
+  if (document.domain && /ft\.com$/.test(document.domain)) {
+    document.domain = 'ft.com';
+  }
+
   window.console = window.console || { log: function() {}, error: function() {} };
 
   if (window.parent === window) {
@@ -27,10 +31,6 @@
     var s = el.style;
     s.display = '';
     s.visibility = '';
-  }
-
-  if (document.domain && /ft\.com$/.test(document.domain)) {
-    document.domain = 'ft.com';
   }
 
   var params = window.location.hash.substr(1).split('__');
