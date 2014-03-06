@@ -2,15 +2,25 @@
 
   'use strict';
 
-  if (document.domain && /ft\.com$/.test(document.domain)) {
-    document.domain = 'ft.com';
-  }
-
   window.console = window.console || { log: function() {}, error: function() {} };
 
-  if (window.parent === window) {
+  var isEmbedded = window.parent !== window;
+  var parentDomain;
+
+  if (!isEmbedded) {
     console.error('This wrapper must be loaded as an iframe');
     return;
+  }
+
+  try{
+    parentDomain = window.parent.document.domain;
+  } catch(e) {
+    document.domain = location.hostname;
+    try{
+      parentDomain = window.parent.document.domain;
+    } catch(e2) {
+      document.domain = 'ft.com';
+    }
   }
 
   var frameElement = window.frameElement;
